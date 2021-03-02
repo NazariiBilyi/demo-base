@@ -4,6 +4,8 @@ const { faunaFetch } = require('./utils/fauna');
 exports.handler = async (_event, context) => {
   const { user } = context.clientContext;
 
+  console.log(user);
+
   const result = await faunaFetch({
     query: `
       query ($netlifyID: ID!) {
@@ -16,8 +18,6 @@ exports.handler = async (_event, context) => {
       netlifyID: user.sub,
     },
   });
-
-  console.log(result)
 
   const { stripeID } = result.data.getUserByNetlifyID;
 
