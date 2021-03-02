@@ -4,20 +4,14 @@ const { faunaFetch } = require('./utils/fauna');
 exports.handler = async (event) => {
   const { user } = JSON.parse(event.body);
 
-  console.log(user);
-
   // create a new customer in Stripe
   const customer = await stripe.customers.create({ email: user.email });
 
-  console.log(customer)
-
   // subscribe the new customer to the free plan
-  const response = await stripe.subscriptions.create({
+  await stripe.subscriptions.create({
     customer: customer.id,
     items: [{ price: process.env.STRIPE_DEFAULT_PRICE_PLAN }],
   });
-
-  console.log(response);
 
   // store the Netlify and Stripe IDs in Fauna
   await faunaFetch({
